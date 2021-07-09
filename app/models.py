@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.enums import Choices
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from django.db.models.fields.related import OneToOneField
+from datetime import datetime
 
 # Create your models here.
 class Pet(models.Model):
@@ -51,12 +52,20 @@ class Profile(models.Model):
             return self.user.username
 
 class Boarding(models.Model):
+        STATUS_CHOICES = (
+            ('Preparing','preparing'),
+            ('Pickup','pickup'),
+            ('delivered','delivered'),
+            ('Boarded','boarded'),
+            ('on the way','on the way')
+        )
         user = models.ForeignKey(User, on_delete=models.CASCADE)
-        pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='boardings', null=True)
+        pet = models.ManyToManyField(Pet,  related_name='boardings')
         duration = models.PositiveIntegerField(help_text="enter number of days")
         chargeamount = models.FloatField(default=100.00)
         is_payment_complete = models.BooleanField()
-        is_pet_dlv_back = models.BooleanField()
+        pick_date = models.DateField(default=datetime.now)
+        status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0])
         date = models.DateTimeField(auto_now = True)
 
         def __str__(self):

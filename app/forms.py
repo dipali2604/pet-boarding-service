@@ -28,4 +28,8 @@ class ProfileForm(forms.ModelForm):
 class BoardingForm(forms.ModelForm):
     class Meta:       
         model = Boarding       
-        fields = ("duration",)
+        fields = ("duration","pet",'pick_date')
+        widgets = {
+            'duration': forms.NumberInput(attrs={'class': 'days', 'id': 'day_input','type':'number'}),
+            'pick_date': forms.DateInput(attrs={'class': 'pick_date', 'id': 'pick_date','type':'date'})
+        }

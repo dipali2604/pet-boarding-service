@@ -58,13 +58,13 @@ def profile_edit(request):
 def add_pets(request):
     form = PetForm()
     if request.method == 'POST':
-        form = PetForm(request.POST)
+        form = PetForm(request.POST,request.FILES)
         if form.is_valid():
             pet = form.save(commit=False)
-            pet.owner = request.user
+            pet.user = request.user   
             pet.save()
             messages.success(request,'Pet added successfully')
-            return redirect('pets')
+            return redirect('view_pets')
         else:
             print(form.errors)
             messages.error(request,'Error adding pet')
@@ -77,10 +77,11 @@ def add_pets(request):
 @login_required
 def view_pets(request):
     try:
-        pets = Pet.objects.filter(owner=request.user)
+        pets = Pet.objects.filter(user=request.user)
         ctx = {'title':'view pets', 'pets':pets}
         return render(request, 'pets/view_pets.html',context=ctx)
-    except:
+    except Exception as e:
+        print(e)
         messages.error(request,'You have no pets')
         return redirect('add_pets')
 
@@ -130,8 +131,25 @@ def view_pet_by_id(request,pk):
 
 @login_required
 def board_pet(request):
-    return render(request, 'pets/board_pet.html')
-
+    try:
+        form = BoardingForm()
+        pets = Pet.objects.filter(user=request.user)
+        if request.method == 'POST':       
+            form = BoardingForm(request.POST)       
+            if form.is_valid():       
+                pet = form.cleaned_data.get('pet')       
+                pet.status = 'Boarding'       
+                pet.save()       
+                messages.success(request,'Pet infomation added')       
+                return redirect('view_boarding')       
+            else:       
+                messages.error(request,'Error updating pet boarding info')
+        ctx = {'title':'view pets', 'pets':pets, 'form':form}
+        return render(request, 'pets/board_pet.html')
+    except Exception as e:
+        print(e)
+        messages.error(request,'No pets to board')
+        return redirect('dashboard')
 @login_required
 def view_boarding(request):
     try:
