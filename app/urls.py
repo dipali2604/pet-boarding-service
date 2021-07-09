@@ -16,6 +16,6 @@ urlpatterns = [
 
     path('board/view',views.view_boarding,name='view_boarding'),
     path('payments/view',views.view_payment,name='view_payment'),
-    path('payments/make',views.make_payment,name='make_payment')
+    path('payments/make/<int:pk>',views.make_payment,name='make_payment')
 
 ]

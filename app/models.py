@@ -53,7 +53,8 @@ class Profile(models.Model):
 
 class Boarding(models.Model):
         STATUS_CHOICES = (
-            ('Preparing','preparing'),
+            ('requested','requested'),
+            ('preparing','preparing'),
             ('Pickup','pickup'),
             ('delivered','delivered'),
             ('Boarded','boarded'),
@@ -63,7 +64,7 @@ class Boarding(models.Model):
         pet = models.ManyToManyField(Pet,  related_name='boardings')
         duration = models.PositiveIntegerField(help_text="enter number of days")
         chargeamount = models.FloatField(default=100.00)
-        is_payment_complete = models.BooleanField()
+        is_payment_complete = models.BooleanField(default=False)
         pick_date = models.DateField(default=datetime.now)
         status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0])
         date = models.DateTimeField(auto_now = True)
@@ -81,9 +82,10 @@ class Payment(models.Model):
 
         )
         user = models.ForeignKey(User, on_delete=models.CASCADE)
+        boarding = models.ForeignKey(Boarding, on_delete=models.CASCADE)
         payment_method = models.CharField(max_length=30,choices=PAYMENT_CHOICES)
         amountpaid =models.FloatField()
-        is_done = models.BooleanField()
+        is_done = models.BooleanField(default=False)
         date = models.DateTimeField(auto_now= True)
 
         def __str__(self):

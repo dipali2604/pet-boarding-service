@@ -1,6 +1,6 @@
 
 from django import forms
-from app.models import Complaint, Review,Pet,Profile,Boarding
+from app.models import Complaint, Payment, Review,Pet,Profile,Boarding
 
 
 class ComplaintForm(forms.ModelForm):
@@ -33,3 +33,8 @@ class BoardingForm(forms.ModelForm):
             'duration': forms.NumberInput(attrs={'class': 'days', 'id': 'day_input','type':'number'}),
             'pick_date': forms.DateInput(attrs={'class': 'pick_date', 'id': 'pick_date','type':'date'})
         }
+
+class PaymentForm(forms.ModelForm):       
+    class Meta:       
+        model = Payment       
+        fields = ('payment_method',)       

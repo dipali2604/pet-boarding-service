@@ -138,10 +138,12 @@ def board_pet(request):
             if request.method == 'POST':       
                 form = BoardingForm(request.POST)       
                 if form.is_valid():       
-                    pet = form.cleaned_data.get('pet')       
-                    pet.status = 'Boarding'       
-                    pet.save()       
-                    messages.success(request,'Pet infomation added')       
+                    board = form.save(commit=False)       
+                    board.status = 'requested'
+                    board.user = request.user    
+                    board.chargeamount = board.generate_charge_amount()
+                    board.save()       
+                    messages.success(request,'Boarding information added, Please pay charge to complete request')       
                     return redirect('view_boarding')       
                 else:       
                     messages.error(request,'Error updating pet boarding info')
@@ -154,21 +156,42 @@ def board_pet(request):
         print(e)
         messages.error(request,e)
         return redirect('dashboard')
+
+
 @login_required
 def view_boarding(request):
     try:
-        boarding = Boarding.objects.filter(owner=request.user)       
-        ctx = {'title':'view boarding', 'boarding':boarding}       
+        boardings = Boarding.objects.filter(user=request.user)       
+        ctx = {'title':'view boarding', 'boardings':boardings}       
         return render(request, 'pets/view_boarding.html',context=ctx)
-    except:
+    except Exception as e:
+        print(e)
         messages.error(request,"Please board a pet first")
         return redirect("board_pets")
-
 
 @login_required
 def view_payment(request):
     return render(request, 'payment/view_payment.html')
 
 @login_required
-def make_payment(request):
-    return render(request, 'payment/make_payment.html')
+def make_payment(request,pk):
+    try:
+        boarding = Boarding.objects.get(id=pk)
+        form = PaymentForm()
+        if request.method == 'POST':
+            form = PaymentForm(request.POST)
+            if form.is_valid():
+                payment = form.save(commit=False)
+                payment.user = request.user
+                payment.boarding = boarding
+                payment.amountpaid = boarding.chargeamount      
+                payment.save()
+                boarding.status = 'preparing'
+                boarding.save()
+                messages.success(request,'Payment added successfully')
+                return redirect('view_payment')      
+        return render(request, 'payment/make_payment.html')
+    except Exception as e:
+        print(e)
+        messages.error(request,'Error making payment')
+        return redirect('view_payment')
