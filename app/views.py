@@ -134,21 +134,25 @@ def board_pet(request):
     try:
         form = BoardingForm()
         pets = Pet.objects.filter(user=request.user)
-        if request.method == 'POST':       
-            form = BoardingForm(request.POST)       
-            if form.is_valid():       
-                pet = form.cleaned_data.get('pet')       
-                pet.status = 'Boarding'       
-                pet.save()       
-                messages.success(request,'Pet infomation added')       
-                return redirect('view_boarding')       
-            else:       
-                messages.error(request,'Error updating pet boarding info')
-        ctx = {'title':'view pets', 'pets':pets, 'form':form}
-        return render(request, 'pets/board_pet.html')
+        if len(pets) > 0:
+            if request.method == 'POST':       
+                form = BoardingForm(request.POST)       
+                if form.is_valid():       
+                    pet = form.cleaned_data.get('pet')       
+                    pet.status = 'Boarding'       
+                    pet.save()       
+                    messages.success(request,'Pet infomation added')       
+                    return redirect('view_boarding')       
+                else:       
+                    messages.error(request,'Error updating pet boarding info')
+            ctx = {'title':'view pets', 'pets':pets, 'form':form}
+            return render(request, 'pets/board_pet.html',ctx)
+        else:
+            messages.error(request,'No pets to board, register some pets first')
+            return redirect('dashboard')
     except Exception as e:
         print(e)
-        messages.error(request,'No pets to board')
+        messages.error(request,e)
         return redirect('dashboard')
 @login_required
 def view_boarding(request):
@@ -157,7 +161,7 @@ def view_boarding(request):
         ctx = {'title':'view boarding', 'boarding':boarding}       
         return render(request, 'pets/view_boarding.html',context=ctx)
     except:
-        messages.error(request,"No boarding details found")
+        messages.error(request,"Please board a pet first")
         return redirect("board_pets")
 
 
