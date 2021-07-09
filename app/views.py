@@ -56,13 +56,33 @@ def profile_edit(request):
 
 @login_required
 def add_pets(request):
-    ctx = {'title':'add pets'}
-    return render(request, 'pets/add_pets.html',context=ctx)
+    form = PetForm()
+    if request.method == 'POST':
+        form = PetForm(request.POST)
+        if form.is_valid():
+            pet = form.save(commit=False)
+            pet.owner = request.user
+            pet.save()
+            messages.success(request,'Pet added successfully')
+            return redirect('pets')
+        else:
+            print(form.errors)
+            messages.error(request,'Error adding pet')
+    ctx ={
+        'title':'add pet',
+        'form':form,
+    }       
+    return render(request,'pets/add_pet.html',context= ctx)       
 
 @login_required
 def view_pets(request):
-    ctx = {'title':'view pets'}
-    return render(request, 'pets/view_pets.html',context=ctx)
+    try:
+        pets = Pet.objects.filter(owner=request.user)
+        ctx = {'title':'view pets', 'pets':pets}
+        return render(request, 'pets/view_pets.html',context=ctx)
+    except:
+        messages.error(request,'You have no pets')
+        return redirect('add_pets')
 
 @login_required
 def delete_pets(request,pk):
@@ -94,7 +114,6 @@ def edit_pets(request,pk):
     except Exception as e:
         return redirect('view_pets')
 
-
 @login_required
 def view_pet_by_id(request,pk):
     try:
@@ -108,3 +127,26 @@ def view_pet_by_id(request,pk):
         print(e)
         messages.error(request,'Pet not found')
         return redirect('view_pets')
+
+@login_required
+def board_pet(request):
+    return render(request, 'pets/board_pet.html')
+
+@login_required
+def view_boarding(request):
+    try:
+        boarding = Boarding.objects.filter(owner=request.user)       
+        ctx = {'title':'view boarding', 'boarding':boarding}       
+        return render(request, 'pets/view_boarding.html',context=ctx)
+    except:
+        messages.error(request,"No boarding details found")
+        return redirect("board_pets")
+
+
+@login_required
+def view_payment(request):
+    return render(request, 'payment/view_payment.html')
+
+@login_required
+def make_payment(request):
+    return render(request, 'payment/make_payment.html')

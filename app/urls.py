@@ -14,7 +14,7 @@ urlpatterns = [
     path('pets/detail/<int:pk>',views.view_pet_by_id,name='view_pet_by_id'),
     path('pets/board',views.board_pet,name='board_pets'),
 
-    path('board/view',views.view_boarding,name='view_pets'),
+    path('board/view',views.view_boarding,name='view_boarding'),
     path('payments/view',views.view_payment,name='view_payment'),
     path('payments/make',views.make_payment,name='make_payment')
 
