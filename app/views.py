@@ -142,7 +142,8 @@ def board_pet(request):
                     board.status = 'requested'
                     board.user = request.user    
                     board.chargeamount = board.generate_charge_amount()
-                    board.save()       
+                    board.save()  
+                         
                     messages.success(request,'Boarding information added, Please pay charge to complete request')       
                     return redirect('view_boarding')       
                 else:       
@@ -156,6 +157,16 @@ def board_pet(request):
         print(e)
         messages.error(request,e)
         return redirect('dashboard')
+
+@login_required
+def delete_boarding(request,pk):
+    try:
+        Boarding.objects.get(id=pk).delete()
+        messages.success(request,'successfully cancelled your request')
+    except Exception as e:
+        print(e)
+        messages.error(request,'Error deleting request') 
+    return redirect('view_pets')
 
 
 @login_required
@@ -185,13 +196,14 @@ def make_payment(request,pk):
                 payment.user = request.user
                 payment.boarding = boarding
                 payment.amountpaid = boarding.chargeamount      
-                payment.save()
                 boarding.status = 'preparing'
+                payment.save()
                 boarding.save()
                 messages.success(request,'Payment added successfully')
-                return redirect('view_payment')      
-        return render(request, 'payment/make_payment.html')
+                return redirect('view_payments')
+        ctx = {'title':'make payment', 'form':form,'board':boarding}   
+        return render(request, 'payment/make_payment.html',ctx)
     except Exception as e:
         print(e)
         messages.error(request,'Error making payment')
-        return redirect('view_payment')
+        return redirect('view_payments')

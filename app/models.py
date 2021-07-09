@@ -24,7 +24,7 @@ class Pet(models.Model):
     specialinstruction = models.TextField()
 
     def __str__(self):
-            return f"{self.name} [{self.pettype}]"
+            return f"{self.name} [{self.pettype}] of {self.user.username}"
 
           
  
@@ -61,7 +61,7 @@ class Boarding(models.Model):
             ('on the way','on the way')
         )
         user = models.ForeignKey(User, on_delete=models.CASCADE)
-        pet = models.ManyToManyField(Pet,  related_name='boardings')
+        pet = models.ForeignKey(Pet,  on_delete=models.CASCADE,related_name='boardings')
         duration = models.PositiveIntegerField(help_text="enter number of days")
         chargeamount = models.FloatField(default=100.00)
         is_payment_complete = models.BooleanField(default=False)
@@ -70,7 +70,7 @@ class Boarding(models.Model):
         date = models.DateTimeField(auto_now = True)
 
         def __str__(self):
-            return self.user.username
+            return f"{self.user.username}"
 
         def generate_charge_amount(self):       
             return self.duration * 100

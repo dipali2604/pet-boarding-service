@@ -34,6 +34,7 @@ class BoardingForm(forms.ModelForm):
             'pick_date': forms.DateInput(attrs={'class': 'pick_date', 'id': 'pick_date','type':'date'})
         }
 
+
 class PaymentForm(forms.ModelForm):       
     class Meta:       
         model = Payment       
