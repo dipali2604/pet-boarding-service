@@ -12,11 +12,11 @@
             background-color: rgba(233, 44, 44, 0.274);
         }
     </style>
-       {% block css %}{% endblock css %}
+    {% block css %}{% endblock css %}
 </head>
 <body>
     
-        
+    
     {% include 'includes/navigation.html' %}
     {% include 'includes/notification.html' %}
     {% block content %}{% endblock content %}
@@ -31,3 +31,7 @@
             $('.toast').toast('show');
         });
     </script> 
+    
+    {% block js %}{% endblock %}
+        
+</body>

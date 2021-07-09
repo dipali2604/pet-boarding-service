@@ -52,7 +52,7 @@ class Profile(models.Model):
 
 class Boarding(models.Model):
         user = models.ForeignKey(User, on_delete=models.CASCADE)
-        pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
+        pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='boardings', null=True)
         duration = models.PositiveIntegerField(help_text="enter number of days")
         chargeamount = models.FloatField(default=100.00)
         is_payment_complete = models.BooleanField()

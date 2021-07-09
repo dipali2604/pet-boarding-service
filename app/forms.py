@@ -21,9 +21,11 @@ class PetForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('name','firstname','lastname','email','phone','gender','dob','photo','altcontact','address','city','pincode')
-
+        fields = ('firstname','lastname','email','phone','gender','dob','photo','altcontact','address','city','pincode')
+        widgets = {
+            'dob': forms.DateInput(attrs={'class': 'datepicker', 'id': 'data_input','type':'date'})
+        }
 class BoardingForm(forms.ModelForm):
     class Meta:       
         model = Boarding       
-        fields = ("duration")
+        fields = ("duration",)
