@@ -90,7 +90,7 @@ AUTHENTICATION_BACKENDS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
 
@@ -156,3 +156,8 @@ EMAIL_PORT = 1025
 SOCIAL_AUTH_GITHUB_KEY =  'CLIENTID AAPKI'
 SOCIAL_AUTH_GITHUB_SECRET = 'CLIENT SECRET AAPKA'
 
+# strip related stuff
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_LIVE_SECRET_KEY", "<your secret key>")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "<your secret key>")
+STRIPE_LIVE_MODE = False  # Change to True in production
+STRIPE_ENDPOINT_SECRET = "whsec_RJKYW61e7BVyspuCj0wSjDhGikYQV7sC"

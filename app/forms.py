@@ -1,5 +1,6 @@
 
 from django import forms
+from django.forms import widgets
 from app.models import Complaint, Payment, Review,Pet,Profile,Boarding
 
 
@@ -12,6 +13,9 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ('rating','review')
+        widgets ={
+            'rating': widgets.NumberInput(attrs={'min': 1, 'max': 5}),
+        }
 
 class PetForm(forms.ModelForm):       
     class Meta:       

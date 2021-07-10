@@ -1,0 +1,93 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block css %}
+<style>
+    body{
+        height: 100vh;
+        background-image: url('https://images.unsplash.com/photo-1604526319196-33a39648792f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=626&q=80');
+        background-size: cover;
+    }
+    .alert-danger ul {
+        list-style: none;
+        padding-left: 0;
+    }
+</style>
+{% endblock css %}
+
+{% block headjs %}
+<script src="https://js.stripe.com/v3/"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+{% endblock headjs %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'view_boarding' %}">Boardings</a></li>
+          <li class="breadcrumb-item active" aria-current="page">View Payment</li>
+        </ol>
+      </nav>
+      <!-- /Breadcrumb -->
+      
+      <div class="row ">
+          <div class="col-12 bg-white">
+            <h3 class="display-4">Your Payment Transactions</h3>
+            <table class="table ">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">boarding</th>
+                    <th scope="col">payment method</th>
+                    <th scope="col">amount paid</th>
+                    <th scope="col">is done</th>
+                    <th scope="col">date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  {% for pay in payments %}
+                  <tr>
+                    <th scope="row">{{pay.id}}</th>
+                    <td>{{pay.boarding.pet.name}}</td>
+                    <td>{{pay.payment_method}}</td>
+                    <td>{{pay.amountpaid}}</td>
+                    <td>{{pay.is_done}}</td>
+                    <td>{{pay.date}}</td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <th scope="row" colspan="6">No Transaction</th>
+                   
+                  </tr>
+                  {% endfor %}
+                      
+                  
+                </tbody>
+              </table>
+          </div>
+      </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block js %}
+<script>
+    $(function () {
+        anime({
+            targets: '.formarea',
+            translateY: '-1%'
+        });
+        $('#id_email').val('{{request.user.email}}')
+    });
+
+    
+</script>
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock js %}
+

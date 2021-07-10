@@ -95,16 +95,33 @@
                                 </div>
                             </div>
                         </div>
-                            
+                        
                         <div class="col-8 gutters-sm">
                             <div class="card">
                                 <div class="card-body">
                                     <h3>Rs {{board.chargeamount}} for duration: {{board.duration}} days</h3>
-                                    <p>STATUS : {{board.status}}</p>
+                                    <p>STATUS : <b>{{board.status}}</b></p>
+                                    <p>PAYMENT DONE : {{board.is_payment_complete}} 
+                                        {% if board.is_payment_complete %}
+                                        <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                        {% else %}
+                                        <i class="fa fa-ban text-danger" aria-hidden="true"></i>
+                                        {% endif %}
+                                    </p>
+                                    <p>PICK UP DATE : <b>{{board.pick_date}}</b></p>
                                 </div>
                                 <div class="card-footer">
-                                    <a class="card-link" href="{% url 'board_delete' board.id %}">Cancel</a>
-                                    <a class="card-link" href="{% url 'make_payment' board.id %}">complete transaction to board pet <button class="btn btn-sm btn-danger">Pay now </button></a>
+                                    
+                                    
+                                    
+                                    {% if board.is_payment_complete %}
+                                    <b>Payment completed</b>
+                                    {% else %}
+                                    <a class="card-link" href="{% url 'make_payment' board.id %}"><button class="btn btn-sm btn-danger">Pay now </button> complete transaction to board pet</a>
+                                    {% endif %}
+                                    
+                                    <a class="card-link" href="{% url 'board_delete' board.id %}">Cancel Boarding</a>
+                                        
                                 </div>
                             </div>
                         </div>
@@ -126,9 +143,18 @@
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
                 <h1 class="display-4">Add new boarding</h1>
-
+                
                 <p class="lead">
                     <a class="btn btn-primary btn-lg" href="{% url 'board_pets' %}" role="button">Create a pet boarding request</a>
+                </p>
+            </div>
+        </div>
+        <div class="jumbotron jumbotron-fluid bg-danger text-center text-white">
+            <div class="container">
+                <h1 class="display-4">Write a Complaint</h1>
+                
+                <p class="lead">
+                    <a class="btn btn-light btn-lg" href="{% url 'complain' %}" role="button">Click here</a>
                 </p>
             </div>
         </div>

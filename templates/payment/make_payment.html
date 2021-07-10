@@ -17,6 +17,10 @@
 </style>
 {% endblock css %}
 
+{% block headjs %}
+<script src="https://js.stripe.com/v3/"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+{% endblock headjs %}
 
 {% block content %}
 <div class="container">
@@ -34,10 +38,15 @@
             <div class="card text-dark" >
                 <div class="card-body">
                     <h4 class="card-title">Select Payment Method</h4>
+                    <div class="d-none" id="boarding_id">{{board.id}}</div>
+                    <div class="card-title">Amount to be paid Rs. <span id="price">{{board.chargeamount}}</span></div>
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
+
                         {{form|crispy}}
-                        <button  class="btn btn-primary btn-sm btn-block">Complete Action</button>
+                        <p id="out"></p>
+
+                        <button  class="btn btn-primary btn-sm btn-block" id="complete">Complete Action</button>
                     </form>
                 </div>
                 
@@ -58,6 +67,8 @@
         $('#id_email').val('{{request.user.email}}')
     });
 
+    
 </script>
+<script src="{% static 'js/main.js' %}"></script>
 {% endblock js %}
 

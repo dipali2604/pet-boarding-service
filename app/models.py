@@ -78,11 +78,11 @@ class Boarding(models.Model):
 class Payment(models.Model):
         PAYMENT_CHOICES = (
                 ('Cash On Delivery','Cash On Delivery'),
-                ('Other UPI IDs', 'Other UPI IDs'),
+                ('payment gateway', 'payment gateway'),
 
         )
         user = models.ForeignKey(User, on_delete=models.CASCADE)
-        boarding = models.ForeignKey(Boarding, on_delete=models.CASCADE)
+        boarding = models.OneToOneField(Boarding, on_delete=models.CASCADE)
         payment_method = models.CharField(max_length=30,choices=PAYMENT_CHOICES)
         amountpaid =models.FloatField()
         is_done = models.BooleanField(default=False)

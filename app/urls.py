@@ -17,6 +17,15 @@ urlpatterns = [
     path('board/view',views.view_boarding,name='view_boarding'),
     path('board/delete/<int:pk>',views.delete_boarding,name='board_delete'),
     path('payments/view',views.view_payment,name='view_payments'),
-    path('payments/make/<int:pk>',views.make_payment,name='make_payment')
+    path('payments/make/<int:pk>',views.make_payment,name='make_payment'),
+
+    path('config/', views.stripe_config),  
+    path('create-checkout-session/', views.create_checkout_session),
+    path('success/', views.success), 
+    path('cancelled/', views.cancelled),
+    path('webhook/', views.stripe_webhook), 
+
+    path("review/",views.review,name='review'),
+    path("complaints/",views.complaint,name='complain'),
 
 ]
